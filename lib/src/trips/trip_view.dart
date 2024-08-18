@@ -27,6 +27,19 @@ class TripView extends StatelessWidget {
         ],
       ),
 
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context, 
+            MaterialPageRoute(
+              builder: (context) => TripSetupView()
+            )
+          );
+        },
+        label: const Text('Add Event'),
+        icon: const Icon(Icons.add),
+      ),
+
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: ListView(
