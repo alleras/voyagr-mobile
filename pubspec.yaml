@@ -10,10 +10,14 @@ environment:
   sdk: '>=3.4.4 <4.0.0'
 
 dependencies:
+  date_field: ^5.2.1
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.1.0
   flutter_localizations:
     sdk: flutter
+  http: ^1.2.2
+  provider: ^6.1.2
   timeline_tile: ^2.0.0
 
 dev_dependencies:
