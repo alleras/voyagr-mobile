@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:voyagr_mobile/components/event_card_information.dart';
 import 'package:voyagr_mobile/components/event_card_title.dart';
-import 'package:voyagr_mobile/components/icon_label.dart';
 
 import 'package:voyagr_mobile/models/trip_model.dart';
+import 'package:voyagr_mobile/components/icon_label.dart';
 
-class EventCard extends StatelessWidget {
-  final Event data;
-  const EventCard({super.key, required this.data});
+class EventTransportationCard extends StatelessWidget {
+  final ItineraryItem data;
+  const EventTransportationCard({super.key, required this.data});
 
   final String text = '';
   
@@ -17,12 +17,13 @@ class EventCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         EventCardTitle(
-          title: 'Leadership Meeting',
-          subtitle: 'Event - 10:25 PM',
+          title: 'Washington - Dallas',
+          subtitle: 'Flight - Departs at 10:25 PM',
         ),
         const SizedBox(height: 10,),
 
         EventCardInformationSection(children: [
+          IconLabel(icon: Icons.info_outline, child: Text('Gate A15')),
           IconLabel(
             icon: Icons.maps_home_work_outlined, 
             child: Column(
@@ -35,8 +36,9 @@ class EventCard extends StatelessWidget {
             ),
           ),
         ]),
-        
-        const SizedBox(height: 10),
+
+
+        const SizedBox(height: 15),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -44,6 +46,10 @@ class EventCard extends StatelessWidget {
               child: const Text('Edit'),
               onPressed: () {},
             ),
+            FilledButton(
+              child: Text('View Ticket'),
+              onPressed: () {},
+            )
           ],
         ),
       ],

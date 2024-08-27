@@ -5,7 +5,7 @@ import 'package:voyagr_mobile/services/trips_service.dart';
 class TripsProvider extends BaseProvider {
   TripsProvider({required super.context});
 
-  Future<Trip?> loadTrip(int id) async {
+  Future<Trip?> loadTrip(String id) async {
     try{
       var service = TripsService();
       final Trip trip = await service.getTrip(id);

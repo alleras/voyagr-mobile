@@ -5,11 +5,9 @@ import 'package:voyagr_mobile/components/icon_label.dart';
 
 import 'package:voyagr_mobile/models/trip_model.dart';
 
-class EventCard extends StatelessWidget {
-  final Event data;
-  const EventCard({super.key, required this.data});
-
-  final String text = '';
+class EventAccomodationCard extends StatelessWidget {
+  final Accommodation data;
+  const EventAccomodationCard({super.key, required this.data});
   
   @override
   Widget build(BuildContext context) {
@@ -17,11 +15,11 @@ class EventCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         EventCardTitle(
-          title: 'Leadership Meeting',
-          subtitle: 'Event - 10:25 PM',
+          title: 'Charleston Place',
+          subtitle: 'Stay - Check in at 10:25 PM',
         ),
         const SizedBox(height: 10,),
-
+        
         EventCardInformationSection(children: [
           IconLabel(
             icon: Icons.maps_home_work_outlined, 
@@ -36,7 +34,7 @@ class EventCard extends StatelessWidget {
           ),
         ]),
         
-        const SizedBox(height: 10),
+        const SizedBox(height: 15),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -44,6 +42,10 @@ class EventCard extends StatelessWidget {
               child: const Text('Edit'),
               onPressed: () {},
             ),
+            FilledButton(
+              child: Text('View Reservation'),
+              onPressed: () {},
+            )
           ],
         ),
       ],

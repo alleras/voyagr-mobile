@@ -5,19 +5,19 @@ import 'package:voyagr_mobile/models/trip_model.dart';
 
 class TripsService extends BaseApiService {
 
-  Future<Trip> getTrip(int tripId) async {
+  Future<Trip> getTrip(String tripId) async {
     final response = await client.get(
       Uri.parse('$endpoint/trips/$tripId'), 
       headers: defaultHeaders
     );
 
-    if(response.statusCode != 200) {
-      throw Exception('Error retrieving Trip.');
-    }
-    else if (response.statusCode == 404){
+    if (response.statusCode == 404){
       throw Exception('Trip not found.');
     }
-
+    else if(response.statusCode != 200) {
+      throw Exception('Error retrieving Trip.');
+    }
+    
     return Trip.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }
 

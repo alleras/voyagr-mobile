@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:voyagr_mobile/models/trip_model.dart';
+
 import '../settings/settings_view.dart';
 import '../../components/trip_card.dart';
 import '../trips/trip_setup_view.dart';
@@ -15,6 +17,8 @@ class TripListView extends StatefulWidget {
 
 class _TripListViewState extends State<TripListView> {
   int currentPageIndex = 0;
+
+  late Future<List<Trip>> tripList;
 
   @override
   Widget build(BuildContext context) {
