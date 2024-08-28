@@ -6,6 +6,7 @@ import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 import 'login/login_view.dart';
 import 'trips/trip_list_view.dart';
+import 'package:voyagr_mobile/util/globals.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
           // returns to the app after it has been killed while running in the
           // background.
           restorationScopeId: 'app',
+          scaffoldMessengerKey: Globals.globalKey,
           debugShowCheckedModeBanner: false,
 
           // Provide the generated AppLocalizations to the MaterialApp. This
