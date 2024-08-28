@@ -1,33 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:voyagr_mobile/providers/trips_provider.dart';
 
 import '../src/trips/trip_view.dart';
+import 'package:voyagr_mobile/models/trip_model.dart';
 
 class TripCard extends StatelessWidget {
-  const TripCard({super.key});
+  const TripCard({super.key, required this.tripData});
+
+  final Trip tripData;
 
   @override
   Widget build(BuildContext context) {
-    return  Card(  
+    var tripsProvider = context.watch<TripsProvider>();
+
+    return Card(  
       clipBehavior: Clip.hardEdge,
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, TripView.routeName);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TripView(tripId: tripData.id),
+            ),
+          );        
         },
         child: Row(children: [
-          Image(
+          const Image(
             height: 100,
             image: AssetImage('assets/images/flutter_logo.png')
           ),
           Expanded(
             child: ListTile(
-              title: Text('This is a Trip'),
-              subtitle: Text('A sufficiently long subtitle warrants three lines.'),
+              title: Text(tripData.name),
+              subtitle: Text(tripData.description ?? ''),
               isThreeLine: true,
               trailing: PopupMenuButton<String>(
                 icon: const Icon(Icons.more_vert),
                 onSelected: (String value) {
                   // Handle the menu selection
                   print('Selected: $value');
+                  switch (value){
+                    case 'Delete': {
+                      tripsProvider.deleteTrip(tripData.id);
+                    }
+                    default: 
+                      return;
+                  }
                 },
                 itemBuilder: (BuildContext context) {
                   return [
