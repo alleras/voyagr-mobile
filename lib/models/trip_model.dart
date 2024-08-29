@@ -1,10 +1,30 @@
 abstract class ItineraryItem { }
 
 class Accommodation implements ItineraryItem {
-  static const type = 'accomodation';
+  static const type = 'accommodation';
 
   String? title, address, paymentStatus, notes;
   DateTime? checkIn, checkOut; 
+
+  Accommodation.fromJson(Map<String, dynamic> json): 
+    title = json['Title'],
+    address = json['Address'],
+    paymentStatus = json['PaymentStatus'],
+    notes = json['Notes'],
+    checkIn = DateTime.parse(json['CheckIn']),
+    checkOut = DateTime.parse(json['CheckOut']);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'Type': type,
+      'Title': title,
+      'Address': address,
+      'PaymentStatus': paymentStatus,
+      'Notes': notes,
+      'CheckIn': checkIn?.toString(),
+      'CheckOut': checkOut?.toString()
+    };
+  }
 }
 
 class TransportationFlight implements ItineraryItem {
@@ -12,6 +32,49 @@ class TransportationFlight implements ItineraryItem {
 
   String? from, to, address, flightStatus, flightGate, seat, notes;
   DateTime? departure, arrival;
+
+  TransportationFlight.fromJson(Map<String, dynamic> json): 
+    from = json['From'],
+    to = json['To'],
+    address = json['Address'],
+    flightStatus = json['FlightStatus'],
+    flightGate = json['FlightGate'],
+    seat = json['Seat'],
+    notes = json['Notes'],
+    departure = DateTime.parse(json['Departure']),
+    arrival = DateTime.parse(json['Arrival']);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'Type': type,
+      'From': from,
+      'To': to,
+      'Address': address,
+      'FlightStatus': flightStatus,
+      'FlightGate': flightGate,
+      'Seat': seat,
+      'Notes': notes,
+      'Departure': departure?.toString(),
+      'Arrival': arrival?.toString()
+    };
+  }
+}
+
+class Event implements ItineraryItem {
+  static const type = 'event';
+  String? address, notes;
+
+  Event.fromJson(Map<String, dynamic> json): 
+    address = json['Address'],
+    notes = json['Notes'];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'Type': type,
+      'Address': address,
+      'Notes': notes
+    };
+  }
 }
 
 class TransportationTrain implements ItineraryItem {
@@ -19,11 +82,6 @@ class TransportationTrain implements ItineraryItem {
 
   String? from, to, address, platform, seat, notes;
   DateTime? departure, arrival;
-}
-
-class Event implements ItineraryItem {
-  static const type = 'event';
-  String? address, notes;
 }
 
 class Trip {
@@ -46,13 +104,13 @@ class Trip {
 
     for (Map<String, dynamic> item in jsonItinerary) 
     {      
-      if (!item.containsKey('type')) continue;
+      if (!item.containsKey('Type')) continue;
 
-      switch (item['type'] as String) {
-        case Accommodation.type: itinerary.add(Accommodation());
-        case TransportationFlight.type: itinerary.add(TransportationFlight());
-        case TransportationTrain.type: itinerary.add(TransportationTrain());
-        case Event.type: itinerary.add(Event());
+      switch (item['Type'] as String) {
+        case Accommodation.type: itinerary.add(Accommodation.fromJson(item));
+        case TransportationFlight.type: itinerary.add(TransportationFlight.fromJson(item));
+        //case TransportationTrain.type: itinerary.add(TransportationTrain.fromJson(item));
+        case Event.type: itinerary.add(Event.fromJson(item));
           break;
         default:
       }
@@ -63,33 +121,13 @@ class Trip {
     List<Map<String, dynamic>> jsonItinerary = [];
     for(var item in itinerary) {
       if (item is Accommodation){
-        jsonItinerary.add({
-          'Title': item.title,
-          'Address': item.address,
-          'PaymentStatus': item.paymentStatus,
-          'Notes': item.notes,
-          'CheckIn': item.checkIn,
-          'CheckOut': item.checkOut
-        });
+        jsonItinerary.add(item.toJson());
       }
       else if (item is TransportationFlight) {
-        jsonItinerary.add({
-          'From': item.from,
-          'To': item.to,
-          'Address': item.address,
-          'FlightStatus': item.flightStatus,
-          'FlightGate': item.flightGate,
-          'Seat': item.seat,
-          'Notes': item.notes,
-          'Departure': item.departure,
-          'Arrival': item.arrival
-        });
+        jsonItinerary.add(item.toJson());
       }
       else if (item is Event) {
-        jsonItinerary.add({
-          'Address': item.address,
-          'Notes': item.notes
-        });
+        jsonItinerary.add(item.toJson());
       }
     }
 
