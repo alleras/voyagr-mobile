@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:date_field/date_field.dart';
+import 'package:provider/provider.dart';
 import 'package:voyagr_mobile/models/trip_model.dart';
+import 'package:voyagr_mobile/providers/trips_provider.dart';
 
 class TripSetupView extends StatefulWidget {
   final Trip? trip;
@@ -19,18 +21,23 @@ class TripSetupView extends StatefulWidget {
 
 class TripSetupViewState extends State<TripSetupView> {
   final _formKey = GlobalKey<FormState>();
-  DateTime? _startDate = DateTime.now();
+  
+  DateTime? startDate = DateTime.now();
+  final TextEditingController tripNameController = TextEditingController(text: '');
+  final TextEditingController tripDescriptionController = TextEditingController(text: ''/*widget.trip?.description*/);
 
   @override
   void initState() {
     super.initState();
-    _startDate = widget.trip?.startDate;
+
+    if (!widget.isEdit) return;
+
+    tripNameController.text = widget.trip!.name;
+    tripDescriptionController.text = widget.trip!.description ?? '';
+    startDate = widget.trip!.startDate ?? DateTime.now();
   }
-
-  Widget buildSetupTripForm(){
-    TextEditingController tripNameController = TextEditingController(text: widget.trip?.name);
-    TextEditingController tripDescriptionController = TextEditingController(text: ''/*widget.trip?.description*/);
-
+  
+  Widget buildSetupTripForm(TripsProvider tripsProvider){
     return Form(
       key: _formKey,
       child: Wrap(
@@ -56,9 +63,9 @@ class TripSetupViewState extends State<TripSetupView> {
             firstDate: DateTime.now().subtract(const Duration(days: 30)),
             lastDate: DateTime.now().add(const Duration(days: 40)),
             initialPickerDateTime: DateTime.now(),
-            value: _startDate,
+            value: startDate,
             onChanged: (DateTime? value) { 
-              setState(() => _startDate = value);
+              setState(() => startDate = value);
             },
           ),
           TextField(
@@ -76,8 +83,20 @@ class TripSetupViewState extends State<TripSetupView> {
           Center(child: 
             FilledButton(
               style: FilledButton.styleFrom(minimumSize: const Size(170, 50)),
-              onPressed: () {
+              onPressed: () async {
                 if (!_formKey.currentState!.validate()) return;
+
+                if (!widget.isEdit){
+                  tripsProvider.addTrip("28", tripNameController.text, startDate!, tripDescriptionController.text);
+                  Navigator.pop(context);
+                } else {
+                  widget.trip!.name = tripNameController.text;
+                  widget.trip!.startDate = startDate!;
+                  widget.trip!.description = tripDescriptionController.text;
+
+                  await tripsProvider.updateTrip(widget.trip!);
+                  if(mounted) Navigator.pop(context);
+                }
               },
               child: widget.isEdit ? const Text('Update') : const Text('Add Trip'),
             )
@@ -97,13 +116,15 @@ class TripSetupViewState extends State<TripSetupView> {
 
   @override
   Widget build(BuildContext context) {
+    var tripsProvider = context.watch<TripsProvider>();
+
     return Scaffold(
       appBar: AppBar(title: 
         widget.isEdit ? Text('Edit trip - ${widget.trip!.name}') : const Text('Add new trip')
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: buildSetupTripForm(),
+        child: buildSetupTripForm(tripsProvider),
       ),
     );
   }

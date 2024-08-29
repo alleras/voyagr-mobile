@@ -8,7 +8,9 @@ import 'package:voyagr_mobile/components/expandable_fab.dart';
 import 'package:voyagr_mobile/models/trip_model.dart';
 
 class TripView extends StatefulWidget {
-  const TripView({super.key,});
+  const TripView({super.key, required this.tripId});
+
+  final String tripId;
 
   static const routeName = '/tripview';
 
@@ -23,7 +25,11 @@ class _TripViewState extends State<TripView> {
   @override
   void initState() {
     super.initState();
-    tripData = TripsProvider(context: context).loadTrip('66babfc8f36871f57a29004f');
+    reloadTrip();
+  }
+
+  reloadTrip() {
+    tripData = TripsProvider(context: context).loadTrip(widget.tripId);
   }
 
   ExpandableFab buildExpandableFab() {
@@ -53,28 +59,17 @@ class _TripViewState extends State<TripView> {
     );
   }
 
-  ListView buildEventList(Trip? tripData) {
-    /*
-        EventTile(item: TransportationFlight()),
-        EventTile(item: Event(), isFirst: true, isPast: true,),
-        EventTile(item: Accommodation()),
-        EventTile(item: TransportationFlight()),
-        EventTile(item: Event()),
-        EventTile(item: Event()),
-        EventTile(item: Event(), isLast: true),
-      ],
-    */
+  ListView buildEventList(Trip tripData) {
     List<Widget> itemList = [const SizedBox(height: 20)];
 
-    itemList.addAll([
-      EventTile(item: TransportationFlight(), isFirst: true, isPast: true,),
-      EventTile(item: Event()),
-      EventTile(item: Accommodation()),
-      EventTile(item: TransportationFlight()),
-      EventTile(item: Event()),
-      EventTile(item: Event()),
-      EventTile(item: Event(), isLast: true),
-    ]);
+    for (final (index, item) in tripData.itinerary.indexed){
+      itemList.add(
+        EventTile(
+          item: item, 
+          isFirst: index == 0, 
+          isLast: index == tripData.itinerary.length - 1)
+        );
+    }
 
     itemList.add(const SizedBox(height: 100));
 
@@ -89,7 +84,7 @@ class _TripViewState extends State<TripView> {
         return Scaffold(
           appBar: AppBar(
             title: snapshot.data != null ? ListTile(
-              title: Text(snapshot.data!.name!),
+              title: Text(snapshot.data!.name),
               subtitle: Text(
                 'Planned for: ${DateFormat('E, MMM dd, yyyy').format(snapshot.data!.startDate!)}', 
                 style: const TextStyle(fontSize: 12),
@@ -104,7 +99,9 @@ class _TripViewState extends State<TripView> {
                     MaterialPageRoute(
                       builder: (context) => TripSetupView(trip: snapshot.data)
                     )
-                  );
+                  ).then((onValue){
+                    setState(() => reloadTrip());
+                  });
                 },
               ),
             ],
@@ -117,7 +114,7 @@ class _TripViewState extends State<TripView> {
           
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: !snapshot.hasData ? const Center(child: CircularProgressIndicator()) : buildEventList(snapshot.data),
+            child: !snapshot.hasData ? const Center(child: CircularProgressIndicator()) : buildEventList(snapshot.data!),
           )
         );
       },

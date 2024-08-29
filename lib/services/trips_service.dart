@@ -18,10 +18,10 @@ class TripsService extends BaseApiService {
       throw Exception('Error retrieving Trip.');
     }
     
-    return Trip.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+    return Trip.fromJson((jsonDecode(response.body) as Map<String, dynamic>)['data']);
   }
 
-  Future<List<Trip>> getAllTrips(int userId) async {
+  Future<List<Trip>> getAllTrips(String userId) async {
     final response = await client.get(
       Uri.parse('$endpoint/trips?user_id=$userId'), 
       headers: defaultHeaders
@@ -31,9 +31,61 @@ class TripsService extends BaseApiService {
       throw Exception('Error retrieving Trip List.');
     }
 
-    return [];//Trip.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+    var jsonTrips = (jsonDecode(response.body) as Map<String, dynamic>)['data'];
+    List<Trip> result = [];
+
+    for (Map<String, dynamic> trip in jsonTrips){
+      result.add(Trip.fromJson(trip));
+    }
+
+    return result;//Trip.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
   }
 
-  void addTrip(Trip trip) async {
+  Future<Trip> addTrip(String owner, tripName, DateTime startDate, [String? description]) async {
+    final response = await client.post(
+      Uri.parse('$endpoint/trips/'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic> {
+        'Name': tripName,
+        'Owner': owner,
+        'Start': startDate.toString(),
+        'End': startDate.toString(),
+        'Description': description ?? '',
+        'SharedWith': [],
+        'Itinerary': [],
+      })
+    );
+
+    if (response.statusCode == 201) {
+      return Trip.fromJson((jsonDecode(response.body) as Map<String, dynamic>)['data']);
+    } else {
+      throw Exception("Error creating trip: ${response.body}");
+    }
+  }
+
+  Future<void> updateTrip(Trip tripData) async {
+    var json = tripData.toJson();
+
+    final response = await client.patch(
+      Uri.parse('$endpoint/trips/${tripData.id}'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(json)
+    );
+
+    if (response.statusCode != 200) throw Exception("Error updating Trip: ${response.body}");
+  }
+
+  void deleteTrip(String tripId) async {
+    final response = await client.delete(
+      Uri.parse('$endpoint/trips/$tripId')
+    );
+
+    if (response.statusCode != 204) {
+      throw Exception("Failed to delete Trip with ID: $tripId");
+    }
   }
 }
