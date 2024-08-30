@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:voyagr_mobile/components/event_card_information.dart';
 import 'package:voyagr_mobile/components/event_card_title.dart';
 
@@ -6,7 +7,7 @@ import 'package:voyagr_mobile/models/trip_model.dart';
 import 'package:voyagr_mobile/components/icon_label.dart';
 
 class EventTransportationCard extends StatelessWidget {
-  final ItineraryItem data;
+  final TransportationFlight data;
   const EventTransportationCard({super.key, required this.data});
 
   final String text = '';
@@ -17,21 +18,33 @@ class EventTransportationCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         EventCardTitle(
-          title: 'Washington - Dallas',
-          subtitle: 'Flight - Departs at 10:25 PM',
+          title: '${data.from!} -> ${data.to}' ,
+          subtitle: 'Flight - Departs at ${DateFormat('jm').format(data.departure!)}',
         ),
         const SizedBox(height: 10,),
 
         EventCardInformationSection(children: [
-          IconLabel(icon: Icons.info_outline, child: Text('Gate A15')),
           IconLabel(
             icon: Icons.maps_home_work_outlined, 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Address', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                Text('1 Saarinen Cir, '),
-                Text('Dulles, VA 20166'),
+                const Text('Address', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                Text(data.address!)
+              ]
+            ),
+          ),
+          IconLabel(icon: Icons.airplane_ticket_outlined, child: Text('Gate ${data.flightGate!}')),
+          if (data.seat != null && data.seat!.isNotEmpty) ... [
+            IconLabel(icon: Icons.chair_outlined, child: Text('Seat ${data.seat!}'))
+          ],
+          IconLabel(
+            icon: Icons.access_alarm_outlined, 
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Arrives', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                Text(DateFormat('MMM dd, yyyy').add_jm().format(data.arrival!)),
               ]
             ),
           ),
@@ -47,7 +60,7 @@ class EventTransportationCard extends StatelessWidget {
               onPressed: () {},
             ),
             FilledButton(
-              child: Text('View Ticket'),
+              child: const Text('View Ticket'),
               onPressed: () {},
             )
           ],

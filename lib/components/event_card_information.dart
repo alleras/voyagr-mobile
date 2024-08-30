@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class EventCardInformationSection extends StatelessWidget{
   final List<Widget> children;
 
-  EventCardInformationSection({super.key, required this.children});
+  const EventCardInformationSection({super.key, required this.children});
 
   @override
   Widget build(BuildContext context) {

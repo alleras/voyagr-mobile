@@ -22,7 +22,7 @@ class EventTile extends StatelessWidget {
   Widget? getInformationCard() {
     if (item is Accommodation) return EventAccomodationCard(data: item as Accommodation);
     if (item is Event) return EventCard(data: item as Event);
-    if (item is TransportationFlight || item is TransportationTrain) return EventTransportationCard(data: item);
+    if (item is TransportationFlight) return EventTransportationCard(data: item as TransportationFlight);
 
     return null;
   }
