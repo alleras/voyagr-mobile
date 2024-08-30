@@ -79,7 +79,7 @@ class TripsService extends BaseApiService {
     if (response.statusCode != 200) throw Exception("Error updating Trip: ${response.body}");
   }
 
-  void deleteTrip(String tripId) async {
+  Future<void> deleteTrip(String tripId) async {
     final response = await client.delete(
       Uri.parse('$endpoint/trips/$tripId')
     );

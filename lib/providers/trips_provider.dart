@@ -68,9 +68,9 @@ class TripsProvider extends BaseProvider {
     }
   }
 
-  void deleteTrip(String id) async {
+  Future<void> deleteTrip(String id) async {
     try{
-      TripsService().deleteTrip(id);
+      await TripsService().deleteTrip(id);
       _trips.remove(_trips.where((trip) => trip.id == id).first);
 
       showInformation("Trip removed");
