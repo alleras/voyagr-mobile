@@ -179,25 +179,30 @@ class EventAccommodationSetupViewState extends State<EventAccommodationSetupView
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: SingleChildScrollView(padding: const EdgeInsets.only(top: 20), child: buildSetupEventForm()),
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton(
-              onPressed: () { Navigator.pop(context); },
-              child: const Text('Cancel'),
-            ),
-            FilledButton(
-              style: FilledButton.styleFrom(
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))), 
-                minimumSize: const Size(50, 50)
+      bottomNavigationBar: AnimatedPadding(
+        duration: const Duration(milliseconds: 20),
+        curve: Curves.decelerate,
+        padding: MediaQuery.of(context).viewInsets,
+        child: BottomAppBar(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton(
+                onPressed: () { Navigator.pop(context); },
+                child: const Text('Cancel'),
               ),
-              onPressed: () async {
-                persistChanges(Provider.of<TripsProvider>(context, listen: false));
-              },
-              child: widget.isEdit ? const Text('Update') : const Text('Add'),
-            ),
-          ],
+              FilledButton(
+                style: FilledButton.styleFrom(
+                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))), 
+                  minimumSize: const Size(50, 50)
+                ),
+                onPressed: () async {
+                  persistChanges(Provider.of<TripsProvider>(context, listen: false));
+                },
+                child: widget.isEdit ? const Text('Update') : const Text('Add'),
+              ),
+            ],
+          ),
         ),
       ),
     );

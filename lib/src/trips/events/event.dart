@@ -72,6 +72,10 @@ class EventSetupViewState extends State<EventSetupView> {
               labelText: 'Event Title',
             ),
             controller: eventTitleController,
+            validator: (value) {
+              if (value == null || value.isEmpty) return 'Please enter a Title';
+              return null;
+            }
           ),
           DateTimeField(
             decoration: const InputDecoration(
@@ -92,6 +96,10 @@ class EventSetupViewState extends State<EventSetupView> {
               labelText: 'Address',
             ),
             controller: addressController,
+            validator: (value) {
+              if (value == null || value.isEmpty) return 'Please enter an Address';
+              return null;
+            }
           ),
           TextFormField(
             controller: eventNotesController,
@@ -147,25 +155,30 @@ class EventSetupViewState extends State<EventSetupView> {
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: SingleChildScrollView(padding: const EdgeInsets.only(top: 20), child: buildSetupEventForm()),
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton(
-              onPressed: () { Navigator.pop(context); },
-              child: const Text('Cancel'),
-            ),
-            FilledButton(
-              style: FilledButton.styleFrom(
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))), 
-                minimumSize: const Size(50, 50)
+      bottomNavigationBar: AnimatedPadding(
+        duration: const Duration(milliseconds: 20),
+        curve: Curves.decelerate,
+        padding: MediaQuery.of(context).viewInsets,
+        child: BottomAppBar(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton(
+                onPressed: () { Navigator.pop(context); },
+                child: const Text('Cancel'),
               ),
-              onPressed: () async {
-                persistChanges(Provider.of<TripsProvider>(context, listen: false));
-              },
-              child: widget.isEdit ? const Text('Update') : const Text('Add'),
-            ),
-          ],
+              FilledButton(
+                style: FilledButton.styleFrom(
+                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))), 
+                  minimumSize: const Size(50, 50)
+                ),
+                onPressed: () async {
+                  persistChanges(Provider.of<TripsProvider>(context, listen: false));
+                },
+                child: widget.isEdit ? const Text('Update') : const Text('Add'),
+              ),
+            ],
+          ),
         ),
       ),
     );
