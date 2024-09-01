@@ -51,6 +51,11 @@ class EventTransportationCard extends StatelessWidget {
               ]
             ),
           ),
+          if (data.notes != null && data.notes!.isNotEmpty) ...[
+            IconLabel(
+            icon: Icons.info_outline,
+            child: Text(data.notes!),
+          )]
         ]),
 
 
