@@ -47,7 +47,7 @@ class TripSetupViewState extends State<TripSetupView> {
             const Text("Let's add some basic information:", style: TextStyle(fontSize: 17)), 
             const SizedBox(height: 30)
           ],
-           TextField(
+          TextField(
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Trip Name',
@@ -57,11 +57,10 @@ class TripSetupViewState extends State<TripSetupView> {
           DateTimeField(
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              labelText: 'Start Date',
+              labelText: 'Date',
             ),       
             mode: DateTimeFieldPickerMode.date,
             firstDate: DateTime.now().subtract(const Duration(days: 30)),
-            lastDate: DateTime.now().add(const Duration(days: 40)),
             initialPickerDateTime: DateTime.now(),
             value: startDate,
             onChanged: (DateTime? value) { 
