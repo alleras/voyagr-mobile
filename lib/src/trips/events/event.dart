@@ -117,11 +117,28 @@ class EventSetupViewState extends State<EventSetupView> {
           if (widget.isEdit) ...[
             IconButton(
               icon: const Icon(Icons.delete),
-              onPressed: (){ 
-                var provider = Provider.of<TripsProvider>(context, listen: false);
-                provider.removeItineraryItem(widget.eventIndex!);
-                Navigator.pop(context);
-              },
+              onPressed: () => showDialog<String>(
+                context: context, 
+                builder: (BuildContext context) => AlertDialog(
+                  title: const Text('Delete'),
+                  content: const Text('Are you sure you want to delete this item?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Cancel'),
+                    ),
+                    FilledButton(
+                      onPressed: () {
+                        var provider = Provider.of<TripsProvider>(context, listen: false);
+                        provider.removeItineraryItem(widget.eventIndex!);
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Delete'),
+                    ),
+                  ],
+                )
+              ),
             )
           ]
         ],
