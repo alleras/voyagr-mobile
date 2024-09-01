@@ -47,12 +47,16 @@ class TripSetupViewState extends State<TripSetupView> {
             const Text("Let's add some basic information:", style: TextStyle(fontSize: 17)), 
             const SizedBox(height: 30)
           ],
-          TextField(
+          TextFormField(
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Trip Name',
             ),
             controller: tripNameController,
+            validator: (value) {
+              if (value == null || value.isEmpty) return 'Please enter a name';
+              return null;
+            }
           ),
           DateTimeField(
             decoration: const InputDecoration(
@@ -67,7 +71,7 @@ class TripSetupViewState extends State<TripSetupView> {
               setState(() => startDate = value);
             },
           ),
-          TextField(
+          TextFormField(
             controller: tripDescriptionController,
             keyboardType: TextInputType.multiline,
             maxLines: 4,
@@ -76,6 +80,10 @@ class TripSetupViewState extends State<TripSetupView> {
               labelText: 'Trip Description',
               hintText: 'Type a short description for your trip'
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) return 'Please enter a description';
+              return null;
+            }
           ),
       
           const SizedBox(height: 150),

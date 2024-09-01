@@ -23,8 +23,8 @@ class EventAccommodationSetupView extends StatefulWidget {
 class EventAccommodationSetupViewState extends State<EventAccommodationSetupView> {
   final _formKey = GlobalKey<FormState>();
   
-  DateTime? checkIn;
-  DateTime? checkOut;
+  DateTime? checkIn = DateTime.now();
+  DateTime? checkOut = DateTime.now();
   final TextEditingController titleController = TextEditingController(text: '');
   final TextEditingController addressController = TextEditingController(text: '');
   final TextEditingController notesController = TextEditingController(text: '');
@@ -43,6 +43,8 @@ class EventAccommodationSetupViewState extends State<EventAccommodationSetupView
   }
 
   void persistChanges(TripsProvider tripsProvider) {
+    if (!_formKey.currentState!.validate()) return;
+
     var event = Accommodation(
       title: titleController.text,
       address: addressController.text,
@@ -58,6 +60,8 @@ class EventAccommodationSetupViewState extends State<EventAccommodationSetupView
     else  {
       tripsProvider.updateItineraryItem(event, widget.eventIndex!);
     }
+
+    Navigator.pop(context);
   }
   
   Widget buildSetupEventForm(){
@@ -67,19 +71,27 @@ class EventAccommodationSetupViewState extends State<EventAccommodationSetupView
         runSpacing: 12.0, // gap between lines
         children: [
           const Text('Title and Address'),
-          TextField(
+          TextFormField(
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Title',
             ),
             controller: titleController,
+            validator: (value) {
+              if (value == null || value.isEmpty) return 'Please enter a Title';
+              return null;
+            }
           ),
-          TextField(
+          TextFormField(
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Address',
             ),
             controller: addressController,
+            validator: (value) {
+              if (value == null || value.isEmpty) return 'Please enter an Address';
+              return null;
+            }
           ),
 
           const SizedBox(height: 65,),
@@ -113,7 +125,7 @@ class EventAccommodationSetupViewState extends State<EventAccommodationSetupView
 
           const SizedBox(height: 65,),
           const Text('Extra Information'),
-          TextField(
+          TextFormField(
             controller: notesController,
             keyboardType: TextInputType.multiline,
             maxLines: 4,
@@ -165,7 +177,6 @@ class EventAccommodationSetupViewState extends State<EventAccommodationSetupView
               ),
               onPressed: () async {
                 persistChanges(Provider.of<TripsProvider>(context, listen: false));
-                if(mounted) Navigator.pop(context);
               },
               child: widget.isEdit ? const Text('Update') : const Text('Add'),
             ),

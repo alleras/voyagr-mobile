@@ -41,6 +41,8 @@ class EventSetupViewState extends State<EventSetupView> {
   }
 
   void persistChanges(TripsProvider tripsProvider) {
+    if (!_formKey.currentState!.validate()) return;
+
     var event = Event(
       title: eventTitleController.text,
       address: addressController.text,
@@ -54,6 +56,8 @@ class EventSetupViewState extends State<EventSetupView> {
     else  {
       tripsProvider.updateItineraryItem(event, widget.eventIndex!);
     }
+    
+    Navigator.pop(context);
   }
   
   Widget buildSetupEventForm(){
@@ -62,7 +66,7 @@ class EventSetupViewState extends State<EventSetupView> {
       child: Wrap(
         runSpacing: 12.0, // gap between lines
         children: [
-          TextField(
+          TextFormField(
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Event Title',
@@ -82,14 +86,14 @@ class EventSetupViewState extends State<EventSetupView> {
               setState(() => startDate = value);
             },
           ),
-          TextField(
+          TextFormField(
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Address',
             ),
             controller: addressController,
           ),
-          TextField(
+          TextFormField(
             controller: eventNotesController,
             keyboardType: TextInputType.multiline,
             maxLines: 4,
@@ -141,7 +145,6 @@ class EventSetupViewState extends State<EventSetupView> {
               ),
               onPressed: () async {
                 persistChanges(Provider.of<TripsProvider>(context, listen: false));
-                if(mounted) Navigator.pop(context);
               },
               child: widget.isEdit ? const Text('Update') : const Text('Add'),
             ),

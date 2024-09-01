@@ -23,8 +23,8 @@ class EventTransportationSetupView extends StatefulWidget {
 class EventTransportationSetupViewState extends State<EventTransportationSetupView> {
   final _formKey = GlobalKey<FormState>();
   
-  DateTime? departureDate;
-  DateTime? arrivalDate;
+  DateTime? departureDate = DateTime.now();
+  DateTime? arrivalDate = DateTime.now();
 
   final TextEditingController fromController = TextEditingController(text: '');
   final TextEditingController toController = TextEditingController(text: '');
@@ -55,6 +55,8 @@ class EventTransportationSetupViewState extends State<EventTransportationSetupVi
   }
 
   void persistChanges(TripsProvider tripsProvider) {
+    if (!_formKey.currentState!.validate()) return;
+
     var event = TransportationFlight(
       from: fromController.text,
       to: toController.text,
@@ -73,6 +75,8 @@ class EventTransportationSetupViewState extends State<EventTransportationSetupVi
     else  {
       tripsProvider.updateItineraryItem(event, widget.eventIndex!);
     }
+
+    Navigator.pop(context);
   }
   
   Widget buildSetupEventForm(){
@@ -87,22 +91,30 @@ class EventTransportationSetupViewState extends State<EventTransportationSetupVi
               Row(
                 children: [
                   Expanded(
-                    child: TextField(
+                    child: TextFormField(
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'From',
                       ),
                       controller: fromController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return 'Please fill out this field';
+                        return null;
+                      }
                     ),
                   ),
                   const SizedBox(width: 20),
                   Expanded(
-                    child: TextField(
+                    child: TextFormField(
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'To',
                       ),
                       controller: toController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return 'Please fill out this field';
+                        return null;
+                      }
                     ),
                   ),
                 ],
@@ -133,24 +145,28 @@ class EventTransportationSetupViewState extends State<EventTransportationSetupVi
                   setState(() => arrivalDate = value);
                 },
               ),
-              TextField(
+              TextFormField(
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Address',
                 ),
                 controller: addressController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Please enter an Address';
+                  return null;
+                }
               ),
         
               const SizedBox(height: 65,),
               const Text('Boarding and seating'),
-              TextField(
+              TextFormField(
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Gate',
                 ),
                 controller: gateController,
               ),
-              TextField(
+              TextFormField(
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Seat',
@@ -160,7 +176,7 @@ class EventTransportationSetupViewState extends State<EventTransportationSetupVi
         
               const SizedBox(height: 65,),
               const Text('Extra Information'),
-              TextField(
+              TextFormField(
                 controller: notesController,
                 keyboardType: TextInputType.multiline,
                 maxLines: 4,
@@ -189,7 +205,6 @@ class EventTransportationSetupViewState extends State<EventTransportationSetupVi
               onPressed: (){ 
                 var provider = Provider.of<TripsProvider>(context, listen: false);
                 provider.removeItineraryItem(widget.eventIndex!);
-                Navigator.pop(context);
               },
             )
           ]
@@ -214,7 +229,6 @@ class EventTransportationSetupViewState extends State<EventTransportationSetupVi
               ),
               onPressed: () async {
                 persistChanges(Provider.of<TripsProvider>(context, listen: false));
-                if(mounted) Navigator.pop(context);
               },
               child: widget.isEdit ? const Text('Update') : const Text('Add'),
             ),
