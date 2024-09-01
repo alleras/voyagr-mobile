@@ -8,12 +8,62 @@ class TripsProvider extends BaseProvider {
   TripsProvider({required super.context});
 
   final List<Trip> _trips = [];
+  Trip? _currentTrip;
+
   UnmodifiableListView<Trip> get trips => UnmodifiableListView(_trips);
+  Trip? get currentTrip => _currentTrip;
+
+  void invalidateCurrentTrip() {
+    _currentTrip = null;
+  }
+
+  Future<void> addItineraryItem(ItineraryItem item) async {
+    if (_currentTrip == null) throw Exception('Cannot add itinerary item to inexistent trip');
+
+    try{
+      _currentTrip!.itinerary.add(item);
+      await TripsService().updateTrip(_currentTrip!);
+      _currentTrip = await TripsService().getTrip(_currentTrip!.id);
+      notifyListeners();
+    }
+    catch(e) {
+      showError(e.toString());
+    }
+  }
+
+  Future<void> updateItineraryItem(ItineraryItem item, int itemIndex) async {
+    if (_currentTrip == null) throw Exception('Cannot update itinerary item on inexistent trip');
+
+    try{
+      _currentTrip!.itinerary[itemIndex] = item;
+      await TripsService().updateTrip(_currentTrip!);
+      _currentTrip = await TripsService().getTrip(_currentTrip!.id);
+      notifyListeners();
+    }
+    catch(e) {
+      showError(e.toString());
+    }
+  }
+
+  Future<void> removeItineraryItem(int itemIndex) async {
+    if (_currentTrip == null) throw Exception('Cannot remove itinerary item on inexistent trip');
+
+    try {
+      _currentTrip!.itinerary.removeAt(itemIndex);
+      await TripsService().updateTrip(_currentTrip!);
+      _currentTrip = await TripsService().getTrip(_currentTrip!.id);
+      notifyListeners();
+    }
+    catch(e) {
+      showError(e.toString());
+    }
+  }
 
   Future<Trip?> loadTrip(String id) async {
     try{
-      var service = TripsService();
-      final Trip trip = await service.getTrip(id);
+      final Trip trip = await TripsService().getTrip(id);
+
+      _currentTrip = trip;
       notifyListeners();
       return trip;
     } 

@@ -3,8 +3,11 @@ abstract class ItineraryItem { }
 class Accommodation implements ItineraryItem {
   static const type = 'accommodation';
 
-  String? title, address, paymentStatus, notes;
-  DateTime? checkIn, checkOut; 
+  String title, address;
+  String? paymentStatus, notes;
+  DateTime checkIn, checkOut; 
+
+  Accommodation({required this.title, required this.address, required this.checkIn, required this.checkOut});
 
   Accommodation.fromJson(Map<String, dynamic> json): 
     title = json['Title'],
@@ -21,8 +24,8 @@ class Accommodation implements ItineraryItem {
       'Address': address,
       'PaymentStatus': paymentStatus,
       'Notes': notes,
-      'CheckIn': checkIn?.toString(),
-      'CheckOut': checkOut?.toString()
+      'CheckIn': checkIn.toString(),
+      'CheckOut': checkOut.toString()
     };
   }
 }
@@ -30,8 +33,17 @@ class Accommodation implements ItineraryItem {
 class TransportationFlight implements ItineraryItem {
   static const type = 'transportation-flight';
 
-  String? from, to, address, flightStatus, flightGate, seat, notes;
-  DateTime? departure, arrival;
+  String from, to, address;
+  String? flightStatus, flightGate, seat, notes;
+  DateTime departure, arrival;
+
+  TransportationFlight({
+    required this.from, 
+    required this.to, 
+    required this.address, 
+    required this.departure, 
+    required this.arrival
+  });
 
   TransportationFlight.fromJson(Map<String, dynamic> json): 
     from = json['From'],
@@ -54,25 +66,33 @@ class TransportationFlight implements ItineraryItem {
       'FlightGate': flightGate,
       'Seat': seat,
       'Notes': notes,
-      'Departure': departure?.toString(),
-      'Arrival': arrival?.toString()
+      'Departure': departure.toString(),
+      'Arrival': arrival.toString()
     };
   }
 }
 
 class Event implements ItineraryItem {
   static const type = 'event';
-  String? address, notes;
+  String title, address;
+  String? notes;
+  DateTime dateTime;
 
   Event.fromJson(Map<String, dynamic> json): 
+    title = json['Title'],
     address = json['Address'],
-    notes = json['Notes'];
+    notes = json['Notes'],
+    dateTime = DateTime.parse(json['EventDatetime']);
+
+  Event({required this.title, required this.address, required this.dateTime, this.notes});
 
   Map<String, dynamic> toJson() {
     return {
       'Type': type,
+      'Title': title,
       'Address': address,
-      'Notes': notes
+      'Notes': notes,
+      'EventDatetime': dateTime.toString()
     };
   }
 }
