@@ -69,7 +69,7 @@ class _ExpandableFabState extends State<ExpandableFab>
       child: SizedBox.expand(
         child: Stack(
           alignment: Alignment.bottomRight,
-          clipBehavior: Clip.none,
+          clipBehavior: Clip.antiAlias,
           children: [
             _buildTapToCloseFab(),
             ..._buildExpandingActionButtons(),
@@ -139,7 +139,7 @@ class _ExpandableFabState extends State<ExpandableFab>
           count: i,
           distance: widget.distance,
           progress: _expandAnimation,
-          child: widget.children[i],
+          child: Visibility(visible: _open, child: widget.children[i]),
         ),
       );
     }
