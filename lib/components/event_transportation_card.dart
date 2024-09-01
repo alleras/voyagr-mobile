@@ -5,10 +5,13 @@ import 'package:voyagr_mobile/components/event_card_title.dart';
 
 import 'package:voyagr_mobile/models/trip_model.dart';
 import 'package:voyagr_mobile/components/icon_label.dart';
+import 'package:voyagr_mobile/src/trips/events/event_transportation.dart';
 
 class EventTransportationCard extends StatelessWidget {
   final TransportationFlight data;
-  const EventTransportationCard({super.key, required this.data});
+  final int itemIndex;
+
+  const EventTransportationCard({super.key, required this.data, required this.itemIndex});
 
   final String text = '';
   
@@ -18,8 +21,8 @@ class EventTransportationCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         EventCardTitle(
-          title: '${data.from!} -> ${data.to}' ,
-          subtitle: 'Flight - Departs at ${DateFormat('jm').format(data.departure!)}',
+          title: '${data.from} → ${data.to}' ,
+          subtitle: 'Flight - Departs at ${DateFormat('jm').format(data.departure)}',
         ),
         const SizedBox(height: 10,),
 
@@ -29,8 +32,8 @@ class EventTransportationCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Address', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                Text(data.address!)
+                const Text('Address', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                Text(data.address)
               ]
             ),
           ),
@@ -44,7 +47,7 @@ class EventTransportationCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('Arrives', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                Text(DateFormat('MMM dd, yyyy').add_jm().format(data.arrival!)),
+                Text(DateFormat('MMM dd, yyyy').add_jm().format(data.arrival)),
               ]
             ),
           ),
@@ -57,11 +60,30 @@ class EventTransportationCard extends StatelessWidget {
           children: [
             TextButton(
               child: const Text('Edit'),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(
+                    builder: (context) => EventTransportationSetupView(event: data, eventIndex: itemIndex,)
+                  )
+                );
+              },
             ),
             FilledButton(
               child: const Text('View Ticket'),
-              onPressed: () {},
+              onPressed: () => showDialog<String>(
+                context: context, 
+                builder: (BuildContext context) => AlertDialog(
+                  title: const Text('Feature in progress'),
+                  content: const Text('This feature is a Work in Progress. Stay tuned!'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'OK'),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                )
+              )
             )
           ],
         ),

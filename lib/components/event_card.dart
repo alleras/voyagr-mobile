@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:voyagr_mobile/components/event_card_information.dart';
 import 'package:voyagr_mobile/components/event_card_title.dart';
 import 'package:voyagr_mobile/components/icon_label.dart';
 
 import 'package:voyagr_mobile/models/trip_model.dart';
+import 'package:voyagr_mobile/src/trips/events/event.dart';
 
 class EventCard extends StatelessWidget {
   final Event data;
-  const EventCard({super.key, required this.data});
+  final int itemIndex;
+
+  const EventCard({super.key, required this.data, required this.itemIndex});
 
   final String text = '';
   
@@ -17,8 +21,8 @@ class EventCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         EventCardTitle(
-          title: 'Leadership Meeting',
-          subtitle: 'Event - 10:25 PM',
+          title: data.title,
+          subtitle: 'Event - ${DateFormat('jm').format(data.dateTime)}',
         ),
         const SizedBox(height: 10,),
 
@@ -28,12 +32,16 @@ class EventCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Address', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                Text('1 Saarinen Cir, '),
-                Text('Dulles, VA 20166'),
+                const Text('Address', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                Text(data.address)
               ]
             ),
           ),
+          if (data.notes != null && data.notes!.isNotEmpty) ...[
+            IconLabel(
+            icon: Icons.info_outline,
+            child: Text(data.notes!),
+          )]
         ]),
         
         const SizedBox(height: 10),
@@ -42,7 +50,14 @@ class EventCard extends StatelessWidget {
           children: [
             TextButton(
               child: const Text('Edit'),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(
+                    builder: (context) => EventSetupView(event: data, eventIndex: itemIndex,)
+                  )
+                );
+              },
             ),
           ],
         ),

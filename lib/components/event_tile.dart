@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import 'package:voyagr_mobile/models/trip_model.dart';
@@ -10,19 +11,39 @@ import 'package:voyagr_mobile/components/event_transportation_card.dart';
 class EventTile extends StatelessWidget {
   final bool isFirst, isLast, isPast;
   final ItineraryItem item;
+  final int itemIndex;
 
   const EventTile({
     super.key, 
     required this.item,
+    required this.itemIndex,
     this.isFirst = false, 
     this.isLast = false, 
     this.isPast = false
   });
 
+  String getDateText(){
+    DateTime date;
+    if (item is Event) {
+      date = (item as Event).dateTime;
+    }
+    else if (item is Accommodation) {
+      date = (item as Accommodation).checkIn;
+    }
+    else if (item is TransportationFlight) {
+      date = (item as TransportationFlight).departure;
+    }
+    else {
+      throw Exception("Undefined type");
+    }
+
+    return DateFormat('dd/MM').format(date);
+  }
+
   Widget? getInformationCard() {
-    if (item is Accommodation) return EventAccomodationCard(data: item as Accommodation);
-    if (item is Event) return EventCard(data: item as Event);
-    if (item is TransportationFlight) return EventTransportationCard(data: item as TransportationFlight);
+    if (item is Accommodation) return EventAccomodationCard(data: item as Accommodation, itemIndex: itemIndex,);
+    if (item is Event) return EventCard(data: item as Event, itemIndex: itemIndex,);
+    if (item is TransportationFlight) return EventTransportationCard(data: item as TransportationFlight, itemIndex: itemIndex,);
 
     return null;
   }
@@ -52,8 +73,8 @@ class EventTile extends StatelessWidget {
       lineXY: 0.17,
       startChild: Container(
           alignment: const Alignment(0.0, -.9),
-          child: const Text(
-            '07/25',
+          child: Text(
+            getDateText(),
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300)
           ),
         ),
