@@ -3,6 +3,7 @@ import 'package:date_field/date_field.dart';
 import 'package:provider/provider.dart';
 import 'package:voyagr_mobile/models/trip_model.dart';
 import 'package:voyagr_mobile/providers/trips_provider.dart';
+import 'package:voyagr_mobile/providers/users_provider.dart';
 
 class TripSetupView extends StatefulWidget {
   final Trip? trip;
@@ -94,7 +95,8 @@ class TripSetupViewState extends State<TripSetupView> {
                 if (!_formKey.currentState!.validate()) return;
 
                 if (!widget.isEdit){
-                  tripsProvider.addTrip("28", tripNameController.text, startDate!, tripDescriptionController.text);
+                  tripsProvider.addTrip(Provider.of<UsersProvider>(context, listen: false).currentUser!.email, 
+                    tripNameController.text, startDate!, tripDescriptionController.text);
                   Navigator.pop(context);
                 } else {
                   widget.trip!.name = tripNameController.text;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:voyagr_mobile/providers/users_provider.dart';
+import 'package:voyagr_mobile/src/account/account_view.dart';
 
 import '../settings/settings_view.dart';
 import '../../components/trip_card.dart';
@@ -20,7 +22,8 @@ class _TripListViewState extends State<TripListView> {
   @override
   void initState() {
     super.initState();
-    Provider.of<TripsProvider>(context, listen: false).loadAllTrips("28");
+    var email = Provider.of<UsersProvider>(context, listen: false).currentUser!.email;
+    Provider.of<TripsProvider>(context, listen: false).loadAllTrips(email);
   }
 
   Widget buildTripPage(TripsProvider tripProvider) {
@@ -28,7 +31,7 @@ class _TripListViewState extends State<TripListView> {
       builder: (context, tripProvider, child){
         var tripList = tripProvider.trips;
 
-        if (tripList.isEmpty) return const Text('No data');
+        if (tripList.isEmpty) return const Center(child: Text('There are no trips yet. Use the "Add Trip" button to start.'));
 
         return ListView.builder(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 80),
@@ -46,6 +49,7 @@ class _TripListViewState extends State<TripListView> {
   @override
   Widget build(BuildContext context) {
     var tripsProvider = context.watch<TripsProvider>();
+    var usersProvider = context.watch<UsersProvider>();
 
     return Scaffold(
       appBar: AppBar(
@@ -55,7 +59,7 @@ class _TripListViewState extends State<TripListView> {
           TextButton(
             child: const Text('Refresh'),
             onPressed: () {
-              tripsProvider.loadAllTrips("28");
+              tripsProvider.loadAllTrips(usersProvider.currentUser!.email);
             },
           )],
           IconButton(
@@ -66,7 +70,7 @@ class _TripListViewState extends State<TripListView> {
           ),
         ],
       ),
-
+    
       bottomNavigationBar: NavigationBar(
         selectedIndex: currentPageIndex,
         onDestinationSelected: (int index) {
@@ -85,12 +89,12 @@ class _TripListViewState extends State<TripListView> {
           ),
         ],
       ),
-
+    
       body: <Widget>[
         buildTripPage(tripsProvider),
-        const Center(child: Text('Work in Progress: Profile page', textAlign: TextAlign.center,)),
+        AccountView(user: usersProvider.currentUser!),
       ][currentPageIndex],
-
+    
       floatingActionButton: Visibility(
         visible: currentPageIndex == 0,
         child: FloatingActionButton.extended(

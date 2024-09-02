@@ -27,7 +27,10 @@ class TripsService extends BaseApiService {
       headers: defaultHeaders
     );
 
-    if(response.statusCode != 200) {
+    if (response.statusCode == 404) {
+      return [];
+    }
+    else if(response.statusCode != 200) {
       throw Exception('Error retrieving Trip List.');
     }
 
