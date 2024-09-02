@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:voyagr_mobile/models/user_model.dart';
+import 'package:voyagr_mobile/providers/trips_provider.dart';
 import 'package:voyagr_mobile/providers/users_provider.dart';
 import 'package:voyagr_mobile/src/account/password_change_view.dart';
 import 'package:voyagr_mobile/src/login/login_view.dart';
@@ -75,6 +76,7 @@ class AccountView extends StatelessWidget {
                     FilledButton(
                       onPressed: () {
                         Provider.of<UsersProvider>(context, listen: false).performLogout();
+                        Provider.of<TripsProvider>(context, listen: false).invalidateSession();
                         Navigator.pushNamedAndRemoveUntil(context, LoginView.routeName, (_) => false);
                       },
                       child: const Text('Log out'),
@@ -102,6 +104,8 @@ class AccountView extends StatelessWidget {
                     FilledButton(
                       onPressed: () {
                         Provider.of<UsersProvider>(context, listen: false).deleteCurrentUser();
+                        Provider.of<UsersProvider>(context, listen: false).performLogout();
+                        Provider.of<TripsProvider>(context, listen: false).invalidateSession();
                         Navigator.pushNamedAndRemoveUntil(context, LoginView.routeName, (_) => false);
                       },
                       child: const Text('Delete'),

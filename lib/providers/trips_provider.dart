@@ -17,6 +17,11 @@ class TripsProvider extends BaseProvider {
     _currentTrip = null;
   }
 
+  void invalidateSession() {
+    _currentTrip = null;
+    _trips.clear();
+  }
+
   Future<void> addItineraryItem(ItineraryItem item) async {
     if (_currentTrip == null) throw Exception('Cannot add itinerary item to inexistent trip');
 
