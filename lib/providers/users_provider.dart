@@ -12,14 +12,59 @@ class UsersProvider extends BaseProvider {
     _currentUser = user;
   }
 
-  Future<User?> createUser(String name, String email) async {
+  Future<void> deleteCurrentUser() async {
+    try {
+      await UsersService().deleteUser(_currentUser!.email);
+    }
+    catch(e) {
+      showError(e.toString());
+    }
+  }
+
+  void performLogout() {
+    _currentUser = null;
+  }
+
+  Future<bool> changePassword(String oldPassword, String newPassword) async {
+    try {
+      if (oldPassword != _currentUser!.password){
+        return false;
+      }
+
+      await UsersService().changePassword(_currentUser!, oldPassword, newPassword);
+      _currentUser!.password = newPassword;
+      return true;
+    }
+    catch(e) {
+      showError(e.toString());
+      return false;
+    }
+  }
+
+  Future<UserRegistrationResponse?> createUser(String name, String email) async {
     try{
-      var user = await UsersService().createUser(name, email);
-      return user;
+      return  await UsersService().createUser(name, email);
     }
     catch(e){
       showError(e.toString());
       return null;
+    }
+  }
+
+  Future<bool> loginUser(String email, String password) async {
+    try{
+      var user = await UsersService().getUser(email);
+
+      if (user == null || user.password != password) {
+        return false;
+      }
+
+      _currentUser = user;
+      return true;
+    }
+    catch(e){
+      showError(e.toString());
+      return false;
     }
   }
 }

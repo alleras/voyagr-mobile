@@ -1,51 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:voyagr_mobile/providers/users_provider.dart';
-import 'package:voyagr_mobile/src/login/password_presenter_view.dart';
 
-class RegisterView extends StatefulWidget {
-  const RegisterView({super.key});
+class PasswordChangeView extends StatefulWidget {
+  const PasswordChangeView({super.key});
 
   static const routeName = '/register';
 
   @override
-  State<RegisterView> createState() => _RegisterViewState();
+  State<PasswordChangeView> createState() => _PasswordChangeViewState();
 }
 
-class _RegisterViewState extends State<RegisterView> {
+class _PasswordChangeViewState extends State<PasswordChangeView> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController oldPasswordController = TextEditingController();
+  final TextEditingController newPasswordController = TextEditingController();
 
-  bool _creatingUser = false;
+  bool _changingPassword = false;
   bool _error = false;
-  String _errorMessage  = '';
 
-  void createUser(BuildContext context) async {
+  void changePassword(BuildContext context) async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _creatingUser = true);
-    var response = await Provider.of<UsersProvider>(context, listen: false).createUser(nameController.text, emailController.text);
+    setState(() => _changingPassword = true);
+    bool changeResult = await Provider.of<UsersProvider>(context, listen: false)
+      .changePassword(oldPasswordController.text, newPasswordController.text);
 
-    if (response != null){
-      if (context.mounted && response.user != null) {
-        Navigator.pushReplacement(
-          context, 
-          MaterialPageRoute(
-            builder: (context) => PasswordPresenterView(user: response.user!)
-          )
-        );
-      }
-      else {
-        setState(() {
-          _error = true;
-          _errorMessage = response.errorMessage!;
-        });
-      }
-    }
+    setState(() => _error = !changeResult);
 
-    setState(() => _creatingUser = false);
+    if(context.mounted && changeResult) Navigator.pop(context);
+    setState(() => _changingPassword = false);
   }
 
   Widget buildRegistrationForm() {
@@ -62,30 +47,31 @@ class _RegisterViewState extends State<RegisterView> {
                   border: Border.all(color: Colors.redAccent, width: 0.5),
                   borderRadius: const BorderRadius.all(Radius.circular(5))
                 ),
-                child: Text(_errorMessage),
+                child: const Text("The password you provided is incorrect."),
               ),
-            ),
+            )
           ],
-          const Text("Let's create your account"),
           TextFormField(
+            obscureText: true,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              labelText: "What's your name?",
+              labelText: "Old Password",
             ),
-            controller: nameController,
+            controller: oldPasswordController,
             validator: (value) {
-              if (value == null || value.isEmpty) return 'Please enter a name';
+              if (value == null || value.isEmpty) return 'Please enter your old password';
               return null;
             }
           ),
           TextFormField(
+            obscureText: true,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
-              labelText: "Tell us your e-mail",
+              labelText: "New Password",
             ),
-            controller: emailController,
+            controller: newPasswordController,
             validator: (value) {
-              if (value == null || value.isEmpty) return 'Please enter your email address';
+              if (value == null || value.isEmpty) return 'Please enter your new password';
               return null;
             }
           ),
@@ -95,17 +81,17 @@ class _RegisterViewState extends State<RegisterView> {
             FilledButton(
               style: FilledButton.styleFrom(minimumSize: const Size(170, 50)),
               onPressed: () async {
-                if(_creatingUser) return;
-                createUser(context);
+                if(_changingPassword) return;
+                changePassword(context);
               },
-              child: _creatingUser ? const CircularProgressIndicator() : const Text('Create Account'),
+              child: _changingPassword ? const CircularProgressIndicator() : const Text('Change Password'),
             )
           ,),
               
           Center(child: 
             TextButton(
               style: TextButton.styleFrom(minimumSize: const Size(170, 50)),
-              onPressed: _creatingUser ? null : () { Navigator.pop(context); },
+              onPressed: _changingPassword ? null : () { Navigator.pop(context); },
               child: const Text('Cancel'),
             )
           ,)
@@ -118,7 +104,7 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create a New Account'),
+        title: const Text('Change your password'),
       ),
       body: Center(
         child: Padding(
