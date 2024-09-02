@@ -39,7 +39,6 @@ class TripCard extends StatelessWidget {
                 icon: const Icon(Icons.more_vert),
                 onSelected: (String value) {
                   // Handle the menu selection
-                  print('Selected: $value');
                   switch (value){
                     case 'Delete': {
                       tripsProvider.deleteTrip(tripData.id);

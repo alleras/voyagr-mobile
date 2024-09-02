@@ -46,7 +46,7 @@ class EventTransportationCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Arrives', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                const Text('Arrives', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                 Text(DateFormat('MMM dd, yyyy').add_jm().format(data.arrival)),
               ]
             ),

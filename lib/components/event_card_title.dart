@@ -4,7 +4,7 @@ class EventCardTitle extends StatelessWidget {
   final String title;
   final String subtitle;
 
-  EventCardTitle({super.key, required this.title, required this.subtitle});
+  const EventCardTitle({super.key, required this.title, required this.subtitle});
 
   @override
   Widget build(BuildContext context) {

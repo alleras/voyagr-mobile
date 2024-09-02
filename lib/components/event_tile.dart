@@ -75,7 +75,7 @@ class EventTile extends StatelessWidget {
           alignment: const Alignment(0.0, -.9),
           child: Text(
             getDateText(),
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300)
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w300)
           ),
         ),
       endChild: Column(

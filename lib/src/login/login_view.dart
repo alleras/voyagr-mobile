@@ -31,7 +31,7 @@ class _LoginViewState extends State<LoginView> {
       .loginUser(emailController.text, passwordController.text);
     setState(() => _loginFailed = !loginResult);
 
-    if(!_loginFailed) Navigator.pushReplacementNamed(context, TripListView.routeName);
+    if(!_loginFailed && context.mounted) Navigator.pushReplacementNamed(context, TripListView.routeName);
   }
 
   Widget buildLoginError() {
