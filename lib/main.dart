@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:voyagr_mobile/providers/trips_provider.dart';
+import 'package:voyagr_mobile/providers/users_provider.dart';
 
 import 'src/app.dart';
 import 'src/settings/settings_controller.dart';
@@ -24,6 +25,7 @@ void main() async {
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => TripsProvider(context: context)),
+        ChangeNotifierProvider(create: (context) => UsersProvider(context: context)),
       ],
       child: MyApp(settingsController: settingsController)),
     );

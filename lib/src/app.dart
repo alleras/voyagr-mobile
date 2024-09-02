@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:voyagr_mobile/src/login/register_view.dart';
 
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
@@ -74,6 +75,8 @@ class MyApp extends StatelessWidget {
                     return SettingsView(controller: settingsController);
                   case TripListView.routeName:
                     return const TripListView();
+                  case RegisterView.routeName:
+                    return const RegisterView();
                   case LoginView.routeName:
                   default:
                     return const LoginView();
