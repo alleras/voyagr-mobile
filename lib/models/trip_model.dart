@@ -155,7 +155,7 @@ class Trip {
       'Name': name,
       'Owner': ownerId,
       'Start': startDate.toString(),
-      'End': endDate?.toString(),
+      'End': endDate?.toString() ?? 'TBD',
       'Description': description ?? '',
       'SharedWith': [],
       'Itinerary': jsonItinerary,
