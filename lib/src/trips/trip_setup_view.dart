@@ -49,6 +49,7 @@ class TripSetupViewState extends State<TripSetupView> {
             const SizedBox(height: 30)
           ],
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Trip Name',
@@ -73,6 +74,7 @@ class TripSetupViewState extends State<TripSetupView> {
             },
           ),
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             controller: tripDescriptionController,
             keyboardType: TextInputType.multiline,
             maxLines: 4,

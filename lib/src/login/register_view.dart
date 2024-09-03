@@ -68,6 +68,7 @@ class _RegisterViewState extends State<RegisterView> {
           ],
           const Text("Let's create your account"),
           TextFormField(
+            textCapitalization: TextCapitalization.words,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: "What's your name?",

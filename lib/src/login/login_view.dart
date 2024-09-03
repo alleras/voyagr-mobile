@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:voyagr_mobile/providers/users_provider.dart';
 import 'package:voyagr_mobile/src/login/register_view.dart';
+import 'package:voyagr_mobile/util/constants.dart';
 import '../trips/trip_list_view.dart';
 
 /// Displays detailed information about a SampleItem.
@@ -49,6 +50,8 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
       body: 
         Center(child:           
@@ -59,9 +62,14 @@ class _LoginViewState extends State<LoginView> {
               child: Wrap(
                 runSpacing: 10.0,
                 children: [
-                    const Center(child: Text('Voyagr')),
+                    Center(
+                      child: Image(
+                        width: 200,
+                        image: AssetImage(isDarkMode ? Constants.LOGO_IMAGE_DARK : Constants.LOGO_IMAGE_LIGHT)
+                      ),
+                    ),                    
+                    
                     const SizedBox(height: 50),
-            
                     if (_loginFailed) ...[
                       buildLoginError(),
                     ],

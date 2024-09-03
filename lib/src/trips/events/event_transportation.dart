@@ -92,6 +92,7 @@ class EventTransportationSetupViewState extends State<EventTransportationSetupVi
                 children: [
                   Expanded(
                     child: TextFormField(
+                      textCapitalization: TextCapitalization.words,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'From',
@@ -106,6 +107,7 @@ class EventTransportationSetupViewState extends State<EventTransportationSetupVi
                   const SizedBox(width: 20),
                   Expanded(
                     child: TextFormField(
+                      textCapitalization: TextCapitalization.words,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'To',
@@ -160,6 +162,7 @@ class EventTransportationSetupViewState extends State<EventTransportationSetupVi
               const SizedBox(height: 65,),
               const Text('Boarding and seating'),
               TextFormField(
+                textCapitalization: TextCapitalization.words,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Gate',
@@ -167,6 +170,7 @@ class EventTransportationSetupViewState extends State<EventTransportationSetupVi
                 controller: gateController,
               ),
               TextFormField(
+                textCapitalization: TextCapitalization.words,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Seat',
@@ -177,6 +181,7 @@ class EventTransportationSetupViewState extends State<EventTransportationSetupVi
               const SizedBox(height: 65,),
               const Text('Extra Information'),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 controller: notesController,
                 keyboardType: TextInputType.multiline,
                 maxLines: 4,

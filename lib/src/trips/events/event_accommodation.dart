@@ -72,6 +72,7 @@ class EventAccommodationSetupViewState extends State<EventAccommodationSetupView
         children: [
           const Text('Title and Address'),
           TextFormField(
+            textCapitalization: TextCapitalization.words,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Title',
@@ -83,6 +84,7 @@ class EventAccommodationSetupViewState extends State<EventAccommodationSetupView
             }
           ),
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Address',
@@ -126,6 +128,7 @@ class EventAccommodationSetupViewState extends State<EventAccommodationSetupView
           const SizedBox(height: 65,),
           const Text('Extra Information'),
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             controller: notesController,
             keyboardType: TextInputType.multiline,
             maxLines: 4,

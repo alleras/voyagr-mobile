@@ -67,6 +67,7 @@ class EventSetupViewState extends State<EventSetupView> {
         runSpacing: 12.0, // gap between lines
         children: [
           TextFormField(
+            textCapitalization: TextCapitalization.words,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Event Title',
@@ -102,6 +103,7 @@ class EventSetupViewState extends State<EventSetupView> {
             }
           ),
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             controller: eventNotesController,
             keyboardType: TextInputType.multiline,
             maxLines: 4,
