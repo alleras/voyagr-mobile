@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:voyagr_mobile/providers/trips_provider.dart';
+import 'package:voyagr_mobile/util/constants.dart';
 
 import '../src/trips/trip_view.dart';
 import 'package:voyagr_mobile/models/trip_model.dart';
 
 class TripCard extends StatelessWidget {
-  const TripCard({super.key, required this.tripData});
+  final int index;
+  const TripCard({super.key, required this.tripData, required this.index});
 
   final Trip tripData;
 
@@ -26,9 +28,9 @@ class TripCard extends StatelessWidget {
           );        
         },
         child: Row(children: [
-          const Image(
+          Image(
             height: 100,
-            image: AssetImage('assets/images/flutter_logo.png')
+            image: AssetImage(Constants.tripImages[index % Constants.tripImages.length])
           ),
           Expanded(
             child: ListTile(

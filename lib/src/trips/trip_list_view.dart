@@ -38,7 +38,7 @@ class _TripListViewState extends State<TripListView> {
           restorationId: 'tripListView',
           itemCount: tripList.length,
           itemBuilder: (BuildContext context, int i) {
-            return TripCard(tripData: tripList[i],);
+            return TripCard(tripData: tripList[i], index: i);
           },
         );
       },
