@@ -69,7 +69,7 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     ),                    
                     
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 100),
                     if (_loginFailed) ...[
                       buildLoginError(),
                     ],
